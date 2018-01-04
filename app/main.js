@@ -4,6 +4,7 @@ import initGame from './game'
 load([
   'images/bg.png',
   'images/box.png',
+  'images/next.png',
   'images/ground.png',
   'images/player.png',
   'images/ground.png',

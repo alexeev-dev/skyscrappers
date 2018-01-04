@@ -1,6 +1,7 @@
 import moveBoxes from './boxes'
 import updateGround from './ground'
 import updatePlayer from './player'
+import {addBoxes, nextBoxPositions} from './generator'
 import {
   ANIMATION_NONE,
   ANIMATION_WALK,
@@ -11,18 +12,14 @@ import {
 export const initialState = {
   ground: [1585, 1585, 1585, 1585, 1585, 1585, 1585, 1585],
   frame: 0,
-  boxes: [{
-    hpos: 0,
-    vpos: 100,
-    speed: 30,
-    isFly: true
-  }],
+  boxes: [],
   player: {
     posx: 540,
     posy: 1585,
     animation: ANIMATION_NONE,
     direction: DIRECTION_RIGHT
-  }
+  },
+  next: []
 }
 
 export function calcNextState(input, prevState, deltaTime) {
@@ -30,5 +27,6 @@ export function calcNextState(input, prevState, deltaTime) {
   const ground = updateGround(fell, prevState)
   const player = updatePlayer(boxes, ground, input, prevState)
   const frame = prevState.frame + 1
-  return {frame, boxes, ground, player}
+  const next = nextBoxPositions(frame + 100)
+  return {frame, boxes: addBoxes(frame, boxes), ground, player, next}
 }

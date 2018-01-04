@@ -5,6 +5,7 @@ function renderSprite(ctx, sprite, textures) {
     ctx.rotate(sprite.rotation)
     ctx.scale(sprite.scale[0], sprite.scale[1])
     ctx.translate(-sprite.anchor[0], -sprite.anchor[1])
+    ctx.globalAlpha = sprite.opacity
     ctx.drawImage(textures[sprite.texture], 0, 0)
     ctx.restore()
   }
