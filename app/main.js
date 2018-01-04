@@ -23,8 +23,6 @@ if (typeof FBInstant !== 'undefined') {
         }
       });
       */
-    console.log(readyTextures)
-    initGame(readyTextures)
   })
 }
 
@@ -43,8 +41,12 @@ load([
   'images/run-5.png'
 ], function (textures) {
   readyTextures = textures
-  if (typeof FBInstant === 'undefined') {
-    initGame(textures)
+  if (typeof FBInstant !== 'undefined') {
+    FBInstant.startGameAsync().then(function() {
+      initGame(textures)
+    });
+  } else {
+    initGame(textures)    
   }
 }, function (progress) {
   if (typeof FBInstant !== 'undefined') {

@@ -40,12 +40,12 @@ function initGame(textures) {
   ], textures)
   // Инициализация подсистем ввода
   initInput(game.input)
-
+  /*
   const gameEl = document.getElementById('game');
   gameEl.addEventListener('click', function() {
     gameEl.mozRequestFullScreen()
   })
-  
+  */
   // Запуск главного цикла игры
   requestAnimationFrame(function () {
     gameLoop(game)
