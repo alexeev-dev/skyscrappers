@@ -32,7 +32,7 @@ function calcPosX({posx, posy}, ground, input) {
 }
 
 function calcPosY(posx, posy, ground) {
-  const posyNext = Math.max(
+  const posyNext = Math.min(
     ground[groundIndex(posx + 35)],
     ground[groundIndex(posx - 35)],
     ground[groundIndex(posx)]
@@ -45,7 +45,7 @@ function calcDirection({isLeftDown, isRightDown}, direction) {
 }
 
 function calcAnimation({isLeftDown, isRightDown}) {
-  return isLeftDown || isRightDown ? ANIMATION_WALK : ANIMATION_WALK
+  return isLeftDown || isRightDown ? ANIMATION_WALK : ANIMATION_NONE
 }
 
 function updatePlayer(boxes, ground, input, {player}) {
@@ -53,7 +53,7 @@ function updatePlayer(boxes, ground, input, {player}) {
   return {
     posx,
     posy: calcPosY(posx, player.posy, ground),
-    direction: calcDirection(input, player.direction)
+    direction: calcDirection(input, player.direction),
     animation: calcAnimation(input)
   }
 }
