@@ -10,19 +10,6 @@ if (typeof FBInstant !== 'undefined') {
       playerInfo.photo = FBInstant.player.getPhoto();
       playerInfo.id = FBInstant.player.getID();
       playerInfo.locale = FBInstant.getLocale();
-      /*
-      var entryPointData = FBInstant.getEntryPointData();
-      if (entryPointData) {
-        forceRematch = entryPointData['force_rematch'];
-      }
-
-      FBInstant.player.getDataAsync(['score'])
-      .then(function(data){
-        if (typeof data['score'] !== 'undefined') {
-          playerInfo.winStreak = data['score'];
-        }
-      });
-      */
   })
 }
 
@@ -34,6 +21,7 @@ load([
   'images/ground.png',
   'images/player.png',
   'images/ground.png',
+  'images/gameOver.png',
   'images/run-1.png',
   'images/run-2.png',
   'images/run-3.png',
@@ -46,11 +34,10 @@ load([
       initGame(textures)
     });
   } else {
-    initGame(textures)    
+    initGame(textures)
   }
 }, function (progress) {
   if (typeof FBInstant !== 'undefined') {
     FBInstant.setLoadingProgress(progress)
-    console.log('all ok...')
   }
 })

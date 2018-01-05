@@ -1,6 +1,6 @@
 import {
   DIRECTION_LEFT, DIRECTION_RIGHT,
-  ANIMATION_NONE, ANIMATION_WALK
+  ANIMATION_NONE, ANIMATION_WALK, ANIMATION_DEAD
 } from '../const'
 
 function groundIndex(posx) {
@@ -44,17 +44,41 @@ function calcDirection({isLeftDown, isRightDown}, direction) {
   return isLeftDown ? DIRECTION_LEFT : isRightDown ? DIRECTION_RIGHT : direction
 }
 
-function calcAnimation({isLeftDown, isRightDown}) {
-  return isLeftDown || isRightDown ? ANIMATION_WALK : ANIMATION_NONE
+function isPlayerMeetBox(posx, posy, box) {
+  if (posy - box.vpos < 120) {
+    const leftBorder = 64 + box.hpos * 119
+    const rightBorder = leftBorder + 119
+    const leftEdgeIn = leftBorder < (posx - 35) && (posx - 35) < rightBorder
+    const rightEdgeIn = leftBorder < (posx + 35) && (posx + 35) < rightBorder
+    return leftEdgeIn || rightEdgeIn
+  } else {
+    return false
+  }
 }
 
-function updatePlayer(boxes, ground, input, {player}) {
-  const posx = calcPosX(player, ground, input)
-  return {
-    posx,
-    posy: calcPosY(posx, player.posy, ground),
-    direction: calcDirection(input, player.direction),
-    animation: calcAnimation(input)
+function calcAnimation({isLeftDown, isRightDown}, posx, posy, boxes) {
+  const dangerBoxes = boxes.filter(box => box.isFly)
+  const isGameOver = dangerBoxes.some(box => isPlayerMeetBox(posx, posy, box))
+  if (isGameOver) {
+    return ANIMATION_DEAD
+  } else {
+    return isLeftDown || isRightDown ? ANIMATION_WALK : ANIMATION_NONE
+  }
+}
+
+function updatePlayer(boxes, ground, input, {frame, player}) {
+  if (player.animation !== ANIMATION_DEAD) {
+    const posx = calcPosX(player, ground, input)
+    const posy = calcPosY(posx, player.posy, ground)
+    const animation = calcAnimation(input, posx, posy, boxes)
+    return {
+      posx, posy,
+      animation,
+      direction: calcDirection(input, player.direction),
+      start: frame
+    }
+  } else {
+    return player
   }
 }
 
