@@ -13,8 +13,9 @@ function getClientPos(e) {
 }
 
 function initInput(input) {
+  const middle = document.body.clientWidth / 2
   window.addEventListener('mousedown', event => {
-    if (event.pageX < 540) {
+    if (event.pageX < middle) {
       input.isLeftDown = true
     } else {
       input.isRightDown = true
@@ -28,7 +29,7 @@ function initInput(input) {
 
   window.addEventListener('touchstart', event => {
     const [pageX] = getClientPos(event)
-    if (pageX < 160) {
+    if (pageX < middle) {
       input.isLeftDown = true
     } else {
       input.isRightDown = true
