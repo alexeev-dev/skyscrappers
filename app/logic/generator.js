@@ -8,10 +8,20 @@ const boxesPattern = [
   [5, 7]
 ]
 
+function makeRandomPermutation(permutations) {
+  const randomIndexes = []
+  const max = permutations.length
+  for (let i = 0; i < max; i++) {
+    randomIndexes.push([Math.random(), permutations[i]])
+  }
+  return randomIndexes.sort((a, b) => a[0] < b[0] ? -1 : 1)
+    .map(([i, val]) => val)
+}
+
 let boxPerm = Combinatorics.permutation([0, 1, 2, 3, 4])
 let starPerm = Combinatorics.permutation([6, 3, 2, 1, 7, 5, 0, 4])
 
-let boxPermCurrent = boxPerm.toArray()
+let boxPermCurrent = makeRandomPermutation(boxPerm.toArray())
 let starPermCurrent = starPerm.next()
 
 function makeBox(hpos, scroll) {
@@ -51,8 +61,8 @@ function patternIndex(frame, size) {
 }
 
 function combination(frame) {
-  const index = Math.floor(frame / 900) % 30
-  return boxPermCurrent[index * 4]
+  const index = Math.floor(frame / 900) % 120
+  return boxPermCurrent[index]
 }
 
 export function nextBoxPositions(frame, next = false) {
