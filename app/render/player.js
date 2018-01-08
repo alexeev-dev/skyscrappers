@@ -1,4 +1,4 @@
-import Sprite from '../core/sprite'
+import renderSprite from '../core/sprite'
 import {
   ANIMATION_NONE,
   ANIMATION_WALK,
@@ -40,13 +40,16 @@ function spriteScale(direction, animation, start, frame) {
   }
 }
 
-function playerSprite(frame, {posx, posy, direction, animation, start}) {
-  return new Sprite(
-    animationFrame(frame, animation),
-    [posx, posy],
-    [65, 131],
-    spriteScale(direction, animation, start, frame)
+function renderPlayer(ctx, {frame, player, scroll}, textures) {
+  const {posx, posy, direction, animation, start} = player
+  const [scaleX, scaleY] = spriteScale(direction, animation, start, frame)
+  renderSprite(
+    ctx,
+    textures[animationFrame(frame, animation)],
+    posx, posy + scroll,
+    65, 131,
+    scaleX, scaleY
   )
 }
 
-export default playerSprite
+export default renderPlayer

@@ -1,26 +1,23 @@
+import {groundIndex} from './ground'
 import {
   DIRECTION_LEFT, DIRECTION_RIGHT,
   ANIMATION_NONE, ANIMATION_WALK, ANIMATION_DEAD
 } from '../const'
 
-function groundIndex(posx) {
-  return Math.min(Math.floor((posx - 64) / 119), 7)
-}
-
 function isTooHighWall(posx, posy, ground) {
   return posy - ground[groundIndex(posx)] > 120
 }
 
-function calcPosX({posx, posy}, ground, input) {
+function calcPosX({posx, posy}, ground, input, coof) {
   if (input.isLeftDown) {
-    const posxNext = posx - 15
+    const posxNext = posx - 15 * coof
     if (isTooHighWall(posxNext - 35, posy, ground) || posxNext < 99) {
       return posx
     } else {
       return posxNext
     }
   } else if (input.isRightDown) {
-    const posxNext = posx + 15
+    const posxNext = posx + 15 * coof
     if (isTooHighWall(posxNext + 35, posy, ground) || posxNext > 981) {
       return posx
     } else {
@@ -66,9 +63,9 @@ function calcAnimation({isLeftDown, isRightDown}, posx, posy, boxes) {
   }
 }
 
-function updatePlayer(boxes, ground, input, {frame, player}) {
+function updatePlayer(boxes, ground, input, coof, {frame, player}) {
   if (player.animation !== ANIMATION_DEAD) {
-    const posx = calcPosX(player, ground, input)
+    const posx = calcPosX(player, ground, input, coof)
     const posy = calcPosY(posx, player.posy, ground)
     const animation = calcAnimation(input, posx, posy, boxes)
     return {

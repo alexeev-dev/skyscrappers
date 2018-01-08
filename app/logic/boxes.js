@@ -1,12 +1,12 @@
-function moveBox(box, ground) {
+function moveBox(box, ground, coof) {
   if (box.isFly) {
     const {hpos, vpos, speed, isFly} = box
     const groundLevel = ground[hpos]
-    const vposNext = vpos + speed
+    const vposNext = vpos + speed * coof
     const isFell = vposNext >= groundLevel
     return [{
       hpos, vpos: isFell ? groundLevel : vposNext,
-      speed: isFell ? 0 : speed + 3,
+      speed: isFell ? 0 : speed,
       isFly: !isFell
     }, isFell]
   } else {
@@ -14,16 +14,17 @@ function moveBox(box, ground) {
   }
 }
 
-function moveBoxes(prevState) {
-  const {boxes, ground} = prevState
-  return boxes.reduce(function (result, box) {
-    const [boxNext, isFell] = moveBox(box, ground)
-    result[0].push(boxNext)
-    if (isFell) {
-      result[1].push(boxNext.hpos)
-    }
-    return result
-  }, [[],[]])
+function moveBoxes(prevState, coof) {
+  const {boxes, ground, scroll} = prevState
+  return boxes.filter(box => box.vpos + scroll < 2000)
+    .reduce(function (result, box) {
+      const [boxNext, isFell] = moveBox(box, ground, coof)
+      result[0].push(boxNext)
+      if (isFell) {
+        result[1].push(boxNext.hpos)
+      }
+      return result
+    }, [[],[]])
 }
 
 export default moveBoxes

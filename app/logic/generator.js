@@ -6,17 +6,17 @@ const boxesPattern = [
   [5, 7]
 ]
 
-function makeBox(hpos) {
+function makeBox(hpos, scroll) {
   return {
     hpos,
-    vpos: 319,
-    speed: 20,
+    vpos: 319 - scroll,
+    speed: 50,
     isFly: true
   }
 }
 
-function makeBoxes(positions) {
-  return positions.map(makeBox)
+function makeBoxes(positions, scroll) {
+  return positions.map(hpos => makeBox(hpos, scroll))
 }
 
 function patternIndex(frame, size) {
@@ -27,9 +27,9 @@ export function nextBoxPositions(frame) {
   return boxesPattern[patternIndex(frame, 5)]
 }
 
-export function addBoxes(frame, boxes) {
-  if (frame % 180 === 40) {
-    return boxes.concat(makeBoxes(nextBoxPositions(frame)))
+export function addBoxes(frame, needBoxes, boxes, scroll) {
+  if (needBoxes && frame % 180 > 40) {
+    return boxes.concat(makeBoxes(nextBoxPositions(frame), scroll))
   } else {
     return boxes
   }

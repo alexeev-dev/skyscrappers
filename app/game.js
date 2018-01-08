@@ -1,7 +1,7 @@
 import {initialState, calcNextState} from './logic/main'
+import renderSprite from './core/sprite'
+import renderFrame from './render/main'
 import calcStage from './stage/main'
-import renderStage from './core/stage'
-import Sprite from './core/sprite'
 import initInput from './input'
 // Подготовка движка браузера для анимаций
 // https://developer.mozilla.org/ru/docs/DOM/window.requestAnimationFrame
@@ -11,12 +11,14 @@ import initInput from './input'
   window.requestAnimationFrame = requestAnimationFrame;
 })();
 
+let lastTime = 0
+
 function gameLoop(game) {
-  const state = calcNextState(game.input, game.state, 0)
-  const stage = calcStage(state)
-  game.fg.clearRect(0, 0, 1080, 1920)
-  renderStage(game.fg, stage, game.textures)
+  const now = Date.now()
+  const state = calcNextState(game.input, game.state, now - lastTime)
+  renderFrame(game.fg, state, game.textures)
   game.state = state
+  lastTime = Date.now()
   requestAnimationFrame(function () {
     gameLoop(game)
   })
@@ -34,10 +36,7 @@ function initGame(textures) {
     }
   }
   // Отрисовываем статичный фон
-  renderStage(game.bg, [
-    new Sprite('images/bg.png'),
-    new Sprite('images/ground.png', [0, 1377])
-  ], textures)
+  renderSprite(game.bg, textures['images/bg.png'])
   // Инициализация подсистем ввода
   initInput(game.input)
   /*
@@ -47,6 +46,7 @@ function initGame(textures) {
   })
   */
   // Запуск главного цикла игры
+  lastTime = Date.now()
   requestAnimationFrame(function () {
     gameLoop(game)
   })
