@@ -3,14 +3,14 @@ function isAlive({vpos, hpos, pickFrame, birthFrame}, ground, frame) {
   return vpos <= ground[hpos] && frame < deathFrame
 }
 
-function isInStar(left, posx) {
-  return left < posx && posx < left + 74
+function isInStar(center, posx) {
+  return center - 65 < posx && posx < center + 65
 }
 
 function isPicked(star, {posx, posy}) {
-  const leftBorder = 86 + star.hpos * 119
+  const left = 86 + star.hpos * 119
   if (star.vpos === posy) {
-    if (isInStar(leftBorder, posx - 65) || isInStar(leftBorder, posx + 65)) {
+    if (isInStar(posx, left - 37) || isInStar(posx, left + 37)) {
       window.score.stars += 1
       return true
     }

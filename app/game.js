@@ -46,8 +46,8 @@ function initGame(textures) {
   const gameEl = document.getElementById('game');
   gameEl.addEventListener('click', function() {
     gameEl.mozRequestFullScreen()
-  })
-  */
+  }) */
+    
   // Запуск главного цикла игры
   lastTime = Date.now()
   requestAnimationFrame(function () {

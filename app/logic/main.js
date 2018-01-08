@@ -54,6 +54,8 @@ export function calcNextState(input, prevState, deltaTime) {
     const next = nextBoxPositions(Math.floor(scaledFrames) + 100)
     const needBoxes = boxCycle(scaledFrames) >= 40 && boxCycle(prevState.scaledFrames) < 40
     const needStars = starCycle(scaledFrames) >= 50 && starCycle(prevState.scaledFrames) < 50
+    const level = player.posy + prevState.scroll
+    const scrollStep = level < 1200 ? (1200 - level) / 500 : 0
     return {
       frame,
       needBoxes,
@@ -64,7 +66,7 @@ export function calcNextState(input, prevState, deltaTime) {
       ground,
       player,
       next,
-      scroll: prevState.scroll + 0.2 * coof,
+      scroll: prevState.scroll + scrollStep * coof,
       isRun: !isGameOver(player.animation, player.start, frame)
     }
   } else {
