@@ -11,7 +11,7 @@ function renderWarning(ctx, {next, scaledFrames}, textures) {
     renderSprite(
       ctx,
       textures[WARNING_BOX_TEXTURE],
-      124 + hpos * 119, 219,
+      124 + hpos * 119, 339,
       60, 119,
       1, 1, opacity
     )

@@ -4,6 +4,9 @@ function moveBox(box, ground, coof) {
     const groundLevel = ground[hpos]
     const vposNext = vpos + speed * coof
     const isFell = vposNext >= groundLevel
+    if (isFell) {
+      window.score.boxes += 1
+    }
     return [{
       hpos, vpos: isFell ? groundLevel : vposNext,
       speed: isFell ? 0 : speed,
@@ -16,7 +19,7 @@ function moveBox(box, ground, coof) {
 
 function moveBoxes(prevState, coof) {
   const {boxes, ground, scroll} = prevState
-  return boxes.filter(box => box.vpos + scroll < 2000)
+  return boxes.filter(box => box.vpos + scroll < 2050)
     .reduce(function (result, box) {
       const [boxNext, isFell] = moveBox(box, ground, coof)
       result[0].push(boxNext)

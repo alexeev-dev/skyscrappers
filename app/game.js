@@ -1,7 +1,6 @@
 import {initialState, calcNextState} from './logic/main'
 import renderSprite from './core/sprite'
 import renderFrame from './render/main'
-import calcStage from './stage/main'
 import initInput from './input'
 // Подготовка движка браузера для анимаций
 // https://developer.mozilla.org/ru/docs/DOM/window.requestAnimationFrame
@@ -16,7 +15,7 @@ let lastTime = 0
 function gameLoop(game) {
   const now = Date.now()
   const state = calcNextState(game.input, game.state, now - lastTime)
-  renderFrame(game.fg, state, game.textures)
+  renderFrame(game.fg, state, window.score, game.textures)
   game.state = state
   lastTime = Date.now()
   requestAnimationFrame(function () {
@@ -34,6 +33,10 @@ function initGame(textures) {
       isLeftDown: false,
       isRightDown: false
     }
+  }
+  window.score = {
+    boxes: 0,
+    stars: 0
   }
   // Отрисовываем статичный фон
   renderSprite(game.bg, textures['images/bg.png'])

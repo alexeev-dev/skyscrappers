@@ -17,6 +17,7 @@ if (typeof FBInstant !== 'undefined') {
 load([
   'images/bg.png',
   'images/box.png',
+  'images/star.png',
   'images/next.png',
   'images/ground.png',
   'images/player.png',
@@ -26,7 +27,10 @@ load([
   'images/run-2.png',
   'images/run-3.png',
   'images/run-4.png',
-  'images/run-5.png'
+  'images/run-5.png',
+  'images/header.png',
+  'images/sbox.png',
+  'images/sstar.png'
 ], function (textures) {
   readyTextures = textures
   if (typeof FBInstant !== 'undefined') {

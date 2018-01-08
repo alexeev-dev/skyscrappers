@@ -1,3 +1,5 @@
+import Combinatorics from 'js-combinatorics'
+
 const boxesPattern = [
   [0, 1, 4],
   [1, 2, 5, 7],
@@ -5,6 +7,12 @@ const boxesPattern = [
   [3, 4, 6],
   [5, 7]
 ]
+
+let boxPerm = Combinatorics.permutation([0, 1, 2, 3, 4])
+let starPerm = Combinatorics.permutation([6, 3, 2, 1, 7, 5, 0, 4])
+
+let boxPermCurrent = boxPerm.toArray()
+let starPermCurrent = starPerm.next()
 
 function makeBox(hpos, scroll) {
   return {
@@ -15,6 +23,25 @@ function makeBox(hpos, scroll) {
   }
 }
 
+function makeStar(frame, ground) {
+  const index = Math.floor(frame / 100) % 8
+  const hpos = starPermCurrent[index]
+  const newStar = {
+    hpos,
+    vpos: ground[hpos],
+    birthFrame: frame,
+    pickFrame: -1
+  }
+  if (index === 7) {
+    starPermCurrent = starPerm.next()
+    if (starPermCurrent === undefined) {
+      starPerm = Combinatorics.permutation([6, 3, 2, 1, 7, 5, 0, 4])
+      starPermCurrent = starPerm.next()
+    }
+  }
+  return newStar
+}
+
 function makeBoxes(positions, scroll) {
   return positions.map(hpos => makeBox(hpos, scroll))
 }
@@ -23,14 +50,28 @@ function patternIndex(frame, size) {
   return Math.floor(frame / 180) % size
 }
 
-export function nextBoxPositions(frame) {
-  return boxesPattern[patternIndex(frame, 5)]
+function combination(frame) {
+  const index = Math.floor(frame / 900) % 30
+  return boxPermCurrent[index * 4]
+}
+
+export function nextBoxPositions(frame, next = false) {
+  const index = patternIndex(frame, 5)
+  return boxesPattern[combination(frame)[index]]
 }
 
 export function addBoxes(frame, needBoxes, boxes, scroll) {
-  if (needBoxes && frame % 180 > 40) {
+  if (needBoxes) {
     return boxes.concat(makeBoxes(nextBoxPositions(frame), scroll))
   } else {
     return boxes
+  }
+}
+
+export function addStar(frame, needStars, stars, ground) {
+  if (needStars) {
+    return stars.concat(makeStar(frame, ground))
+  } else {
+    return stars
   }
 }
