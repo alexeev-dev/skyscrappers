@@ -1,8 +1,7 @@
 import {groundIndex} from './ground'
-import {
-  DIRECTION_LEFT, DIRECTION_RIGHT,
-  ANIMATION_NONE, ANIMATION_WALK, ANIMATION_DEAD
-} from '../const'
+
+export const DIRECTION_LEFT = 'DIRECTION_LEFT'
+export const DIRECTION_RIGHT = 'DIRECTION_RIGHT'
 
 function isTooHighWall(posx, posy, ground) {
   return posy - ground[groundIndex(posx)] > 120
@@ -53,26 +52,24 @@ function isPlayerMeetBox(posx, posy, box) {
   }
 }
 
-function calcAnimation({isLeftDown, isRightDown}, posx, posy, boxes) {
+function isPlayerAlive(posx, posy, boxes) {
   const dangerBoxes = boxes.filter(box => box.isFly)
-  const isGameOver = dangerBoxes.some(box => isPlayerMeetBox(posx, posy, box))
-  if (isGameOver) {
-    return ANIMATION_DEAD
-  } else {
-    return isLeftDown || isRightDown ? ANIMATION_WALK : ANIMATION_NONE
-  }
+  return !dangerBoxes.some(box => isPlayerMeetBox(posx, posy, box))
 }
 
-function updatePlayer(boxes, ground, input, coof, {frame, player}) {
-  if (player.animation !== ANIMATION_DEAD) {
-    const posx = calcPosX(player, ground, input, coof)
+function updatePlayer(boxes, ground, state, input, delta) {
+  const {player} = state.stage
+  if (player.isAlive) {
+    const posx = calcPosX(player, ground, input, delta)
     const posy = calcPosY(posx, player.posy, ground)
-    const animation = calcAnimation(input, posx, posy, boxes)
+    const isAlive = isPlayerAlive(posx, posy, boxes)
     return {
-      posx, posy,
-      animation,
+      posx,
+      posy,
+      isAlive,
+      deathFrame: isAlive ? -1 : state.frame,
+      isWalking: input.isLeftDown || input.isRightDown,
       direction: calcDirection(input, player.direction),
-      start: frame
     }
   } else {
     return player

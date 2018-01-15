@@ -14,6 +14,7 @@ function getClientPos(e) {
 
 function initInput(input) {
   const middle = document.body.clientWidth / 2
+  const game = document.getElementById('game')
   window.addEventListener('mousedown', event => {
     if (event.pageX < middle) {
       input.isLeftDown = true
@@ -27,19 +28,19 @@ function initInput(input) {
     input.isRightDown = false
   })
 
-  window.addEventListener('touchstart', event => {
+  game.addEventListener('touchstart', event => {
     const [pageX] = getClientPos(event)
     if (pageX < middle) {
       input.isLeftDown = true
     } else {
       input.isRightDown = true
     }
-  })
+  }, false)
 
-  window.addEventListener('touchend', event => {
+  game.addEventListener('touchend', event => {
     input.isLeftDown = false
     input.isRightDown = false
-  })
+  }, false)
 }
 
 export default initInput

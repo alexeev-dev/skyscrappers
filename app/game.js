@@ -1,58 +1,65 @@
-import {initialState, calcNextState} from './logic/main'
-import renderSprite from './core/sprite'
+import {initState, calcNextState} from './logic/main'
 import renderFrame from './render/main'
 import initInput from './input'
-// Подготовка движка браузера для анимаций
-// https://developer.mozilla.org/ru/docs/DOM/window.requestAnimationFrame
-(function() {
-  var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-                              window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-  window.requestAnimationFrame = requestAnimationFrame;
-})();
 
-let lastTime = 0
+const requestAnimationFrame = (
+  window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+  window.webkitRequestAnimationFrame || window.msRequestAnimationFrame
+)
 
-function gameLoop(game) {
-  const now = Date.now()
-  const state = calcNextState(game.input, game.state, now - lastTime)
-  renderFrame(game.fg, state, window.score, game.textures)
-  game.state = state
-  lastTime = Date.now()
-  requestAnimationFrame(function () {
-    gameLoop(game)
-  })
+function getGameCanvas() {
+  return {
+    bg: document.getElementById('bg').getContext('2d'),
+    fg: document.getElementById('fg').getContext('2d')
+  }
 }
 
-function initGame(textures) {
-  const game = {
-    textures,
-    state: initialState,
-    bg: document.getElementById('bg').getContext('2d'),
-    fg: document.getElementById('fg').getContext('2d'),
-    input: {
-      isLeftDown: false,
-      isRightDown: false
+class Skyscrapper {
+  constructor(textures) {
+    this.lastTime = 0
+    this.textures = textures
+    this.state = initState(this)
+    this.input = initInput(this)
+    this.canvas = getGameCanvas()
+    this.events = {
+      boxFell: this.handleBoxFell.bind(this),
+      starPicked: this.handleStarPickup.bind(this)
     }
   }
-  window.score = {
-    boxes: 0,
-    stars: 0
+
+  run() {
+    this.lastTime = Date.now()
+    requestAnimationFrame(() => {
+      this.loop()
+    })
   }
-  // Отрисовываем статичный фон
-  renderSprite(game.bg, textures['images/bg.png'])
-  // Инициализация подсистем ввода
-  initInput(game.input)
-  /*
-  const gameEl = document.getElementById('game');
-  gameEl.addEventListener('click', function() {
-    gameEl.mozRequestFullScreen()
-  }) */
-    
-  // Запуск главного цикла игры
-  lastTime = Date.now()
-  requestAnimationFrame(function () {
-    gameLoop(game)
-  })
+
+  trigger(event, data) {
+    if (typeof this.events[event] === 'function') {
+      this.events[event](data)
+    }
+  }
+
+  handleBoxFell() {
+    const {score} = this.state.ui.gameplay
+    this.state.ui.gameplay.score = score + 1
+  }
+
+  handleStarPickup() {
+    const {stars} = this.state.ui.common.score
+    this.state.ui.common.score.stars = stars + 1
+  }
+
+  loop() {
+    const {state: prevState, input, canvas, textures, lastTime} = this
+    const state = calcNextState(prevState, input, Date.now() - lastTime)
+    renderFrame(state, canvas, textures)
+    this.state = state
+    this.lastTime = Date.now()
+    requestAnimationFrame(() => {
+      this.loop()
+    })
+  }
 }
 
-export default initGame
+export default Skyscrapper

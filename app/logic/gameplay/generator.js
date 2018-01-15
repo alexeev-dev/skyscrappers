@@ -33,7 +33,7 @@ function makeBox(hpos, scroll) {
   }
 }
 
-function makeStar(frame, ground) {
+export function makeStar(frame, ground) {
   const index = Math.floor(frame / 100) % 8
   const hpos = starPermCurrent[index]
   const newStar = {
@@ -70,18 +70,6 @@ export function nextBoxPositions(frame, next = false) {
   return boxesPattern[combination(frame)[index]]
 }
 
-export function addBoxes(frame, needBoxes, boxes, scroll) {
-  if (needBoxes) {
-    return boxes.concat(makeBoxes(nextBoxPositions(frame), scroll))
-  } else {
-    return boxes
-  }
-}
-
-export function addStar(frame, needStars, stars, ground) {
-  if (needStars) {
-    return stars.concat(makeStar(frame, ground))
-  } else {
-    return stars
-  }
+export function nextBoxes(frame, scroll) {
+  return makeBoxes(nextBoxPositions(frame), scroll)
 }

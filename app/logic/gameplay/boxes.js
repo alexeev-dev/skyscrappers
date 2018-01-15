@@ -17,11 +17,10 @@ function moveBox(box, ground, coof) {
   }
 }
 
-function moveBoxes(prevState, coof) {
-  const {boxes, ground, scroll} = prevState
+function moveBoxes({boxes, ground}, scroll, delta) {
   return boxes.filter(box => box.vpos + scroll < 2050)
     .reduce(function (result, box) {
-      const [boxNext, isFell] = moveBox(box, ground, coof)
+      const [boxNext, isFell] = moveBox(box, ground, delta)
       result[0].push(boxNext)
       if (isFell) {
         result[1].push(boxNext.hpos)
