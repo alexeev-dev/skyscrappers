@@ -18,9 +18,9 @@ function updateStage(frame, state, input, delta) {
   const [boxes, fell] = moveBoxes(state.stage, state.scroll, delta)
   const ground = updateGround(fell, state.stage.ground)
   const player = updatePlayer(boxes, ground, state, input, delta)
-  const stars = updateStars(player, ground, state)
+  const [stars, picked] = updateStars(player, ground, state)
   const warning = nextBoxPositions(Math.floor(frame) + 100)
-  return {
+  return [{
     player,
     ground,
     warning,
@@ -28,7 +28,7 @@ function updateStage(frame, state, input, delta) {
       stars.concat(makeStar(frame, ground)) : stars),
     boxes: (needBoxes(frame, state.frame) ?
       boxes.concat(nextBoxes(frame, state.scroll)) : boxes)
-  }
+  }, fell.length, picked]
 }
 
 export default updateStage

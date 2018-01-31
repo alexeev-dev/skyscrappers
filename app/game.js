@@ -1,5 +1,5 @@
-import {initState, calcNextState} from './logic/main'
-import renderFrame from './render/main'
+import {initState, calcNextState} from './logic'
+import renderFrame from './render'
 import initInput from './input'
 
 const requestAnimationFrame = (
@@ -21,9 +21,11 @@ class Skyscrapper {
     this.state = initState(this)
     this.input = initInput(this)
     this.canvas = getGameCanvas()
+    this.handleBoxFell = this.handleBoxFell.bind(this)
+    this.handleStarPickup = this.handleStarPickup.bind(this)
     this.events = {
-      boxFell: this.handleBoxFell.bind(this),
-      starPicked: this.handleStarPickup.bind(this)
+      boxFell: this.handleBoxFell,
+      starPicked: this.handleStarPickup
     }
   }
 

@@ -11,7 +11,6 @@ function isPicked(star, {posx, posy}) {
   const left = 86 + star.hpos * 119
   if (star.vpos === posy) {
     if (isInStar(posx, left - 37) || isInStar(posx, left + 37)) {
-      window.score.stars += 1
       return true
     }
   }
@@ -33,8 +32,12 @@ function updateStar(star, player, frame) {
 
 function updateStars(player, ground, {frame, stage}) {
   const {stars} = stage
-  return stars.filter(star => isAlive(star, ground, frame))
-    .map(star => updateStar(star, player, frame))
+  let picked = 0
+  return [stars.filter(star => isAlive(star, ground, frame))
+    .map(star => {
+      const updated = updateStar(star, player, frame)
+      picked = star.pickFrame !== updated.pickFrame ? picked + 1 : picked
+    }), picked]
 }
 
 export default updateStars

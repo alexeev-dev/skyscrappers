@@ -36,15 +36,15 @@ export function gameplayNext(state, input, deltaTime) {
   const delta = deltaTime / 16
   if (state.isRun) {
     const frame = state.frame + delta
-    const stage = updateStage(frame, state, input, delta)
+    const [stage, fell, picked] = updateStage(frame, state, input, delta)
     const level = stage.player.posy + state.scroll
     const scroll = level < 1200 ? (1200 - level) / 500 : 0
-    return {
+    return [{
       frame,
       stage,
       isRun: !isGameOver(frame, state.stage.player),
       scroll: state.scroll + scroll * delta,
       iteration: state.iteration + 1
-    }
+    }, fell, picked]
   }
 }

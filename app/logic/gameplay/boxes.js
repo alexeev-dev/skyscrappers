@@ -4,9 +4,6 @@ function moveBox(box, ground, coof) {
     const groundLevel = ground[hpos]
     const vposNext = vpos + speed * coof
     const isFell = vposNext >= groundLevel
-    if (isFell) {
-      window.score.boxes += 1
-    }
     return [{
       hpos, vpos: isFell ? groundLevel : vposNext,
       speed: isFell ? 0 : speed,

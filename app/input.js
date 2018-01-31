@@ -12,35 +12,51 @@ function getClientPos(e) {
   return [pageX, pageY]
 }
 
-function initInput(input) {
-  const middle = document.body.clientWidth / 2
-  const game = document.getElementById('game')
-  window.addEventListener('mousedown', event => {
-    if (event.pageX < middle) {
-      input.isLeftDown = true
-    } else {
-      input.isRightDown = true
-    }
-  })
-
-  window.addEventListener('mouseup', event => {
-    input.isLeftDown = false
-    input.isRightDown = false
-  })
-
-  game.addEventListener('touchstart', event => {
-    const [pageX] = getClientPos(event)
+const makeMouseDownHandler = (input, middle) => {
+  return (event) => {
+    const [pageX, pageY] = getClientPos(event)
+    input.pageX = pageX
+    input.pageY = pageY
+    input.isMouseDown = true
     if (pageX < middle) {
       input.isLeftDown = true
     } else {
       input.isRightDown = true
     }
-  }, false)
+  }
+}
 
-  game.addEventListener('touchend', event => {
+const makeMouseUpHandler = (input) => {
+  return (event) => {
+    input.isMouseDown = false
     input.isLeftDown = false
     input.isRightDown = false
-  }, false)
+  }
+}
+
+function initInput() {
+  const width = document.body.clientWidth
+  const middle = width / 2
+  const game = document.getElementById('game')
+
+  const input = {
+    width,
+    pageX: 0,
+    pageY: 0,
+    isLeftDown: false,
+    isRightDown: false,
+    isMouseDown: false
+  }
+
+  const handleMouseDown = makeMouseDownHandler(input, middle)
+  const handleMouseUp = makeMouseUpHandler(input)
+
+  game.addEventListener('mousedown', handleMouseDown)
+  game.addEventListener('mouseup', handleMouseUp)
+  game.addEventListener('touchstart', handleMouseDown, false)
+  game.addEventListener('touchend', handleMouseUp, false)
+
+  return input
 }
 
 export default initInput
