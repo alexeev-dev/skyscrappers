@@ -1,4 +1,4 @@
-import {isInRect, mapToScreen} from './utils'
+import {testButton} from './utils'
 import {SCREEN_MAIN} from './screens'
 
 const buttons = {
@@ -8,16 +8,6 @@ const buttons = {
   choosePlace: [708, 896, 226, 220],
   challenge: [301, 1259, 480, 151],
   play: [411, 903, 253, 265]
-}
-
-function testButton(button, input) {
-  if (input.isMouseDown) {
-    const {pageX, pageY, width} = input
-    const p = mapToScreen(pageX, pageY, width)
-    return isInRect(button, p)
-  } else {
-    return false
-  }
 }
 
 function updateMainScreen(ui, input) {
