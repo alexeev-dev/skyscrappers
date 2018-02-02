@@ -1,7 +1,7 @@
 import {testButton} from './utils'
 import {SCREEN_MAIN} from './screens'
 
-const buttons = {
+export const buttons = {
   addPerson: [40, 1037, 109, 113],
   addPlace: [950, 1037, 109, 113],
   choosePerson: [154, 896, 209, 220],

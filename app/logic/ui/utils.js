@@ -18,3 +18,13 @@ export function testButton(button, input) {
     return false
   }
 }
+
+export function testButtonUp(button, input) {
+  if (!input.isMouseDown) {
+    const {pageX, pageY, width} = input
+    const p = mapToScreen(pageX, pageY, width)
+    return isInRect(button, p)
+  } else {
+    return false
+  }
+}
