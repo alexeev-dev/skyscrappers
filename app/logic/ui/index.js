@@ -1,4 +1,9 @@
-import {SCREEN_MAIN} from './screens'
+import updateScreen, {SCREEN_MAIN} from './screens'
+import updateMainScreen from './main'
+import updateCommon from './common'
+import updateGameplay from './gameplay'
+import updateSound from './sound'
+import updateResult from './result'
 
 export function initUI() {
   return {
@@ -37,13 +42,13 @@ export function initUI() {
   }
 }
 
-function calcNextScreen(ui, input) {
-  return SCREEN_MAIN
-}
-
 export function uiNext(ui, fell, picked, input, delta) {
   return {
-    screen: calcNextScreen(ui, input),
-    mainScreen: calcMainScreen(ui)
+    screen: updateScreen(ui, input),
+    mainScreen: updateMainScreen(ui, input),
+    common: updateCommon(ui, input, fell, picked),
+    gameplay: updateGameplay(ui, input, fell),
+    soundMenu: updateSound(ui, input),
+    result: updateResult(ui, input)
   }
 }
